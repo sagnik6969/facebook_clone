@@ -23,6 +23,8 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //  Passport::$registersRoutes
+        // my guess is that passport routes will be registered 
+        // automatically in laravel. 
         
     }
 }
