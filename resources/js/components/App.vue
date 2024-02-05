@@ -1,5 +1,8 @@
-<template>Sagnik <router-vue></router-vue></template>
+<template>
+    <div class="bg-slate-500">Sagnik</div>
+    <router-vue></router-vue>
+</template>
 
-<script setup>
-import { RouterView } from "vue-router";
-</script>
+<script setup></script>
+
+<style></style>
