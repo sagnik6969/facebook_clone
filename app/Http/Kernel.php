@@ -37,6 +37,13 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class
+            // By including this middleware in your application's middleware stack, 
+            // you ensure that API clients receive a fresh @csrf token with each response, 
+            // this token will be used to prevent csrf attacks  
+            // for more details view the CreateFreshApiToken
+            // the token is stored in a passport cookie
+            // passport => works along side laravel session.
+            // this middleware is equivalent to adding @csrf in the blade file.
         ],
 
         'api' => [

@@ -47,6 +47,14 @@ return [
         ],
     ],
 
+    // When attaching the auth middleware to a route, 
+    // you may also specify which "guard" should be used 
+    // to authenticate the user. The guard specified 
+    // should correspond to one of the keys in the guards 
+    // array of your auth.php configuration file:
+    // middleware('auth:admin'); =>admin is the guard name
+
+
     /*
     |--------------------------------------------------------------------------
     | User Providers
