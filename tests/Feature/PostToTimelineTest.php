@@ -39,9 +39,18 @@ class PostToTimelineTest extends TestCase
         $this->assertEquals($user->id, $post->user->id);
         $this->assertEquals('Testing Body', $post->body);
 
+        // $response->dump();
+
         $response->assertStatus(201)
             ->assertJson([
                 'data' => [
+                    'posted_by' => [
+                        'data' => [
+                            'attributes' => [
+                                'name' => $user->name
+                            ]
+                        ]
+                    ],
                     'type' => 'posts',
                     'post_id' => $post->id,
                     'attributes' => [
