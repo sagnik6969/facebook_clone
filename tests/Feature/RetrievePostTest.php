@@ -32,18 +32,18 @@ class RetrievePostTest extends TestCase
                     [
                         'data' => [
                             'type' => 'posts',
-                            'post_id' => $posts->first()->id,
+                            'post_id' => $posts->last()->id,
                             'attributes' => [
-                                'body' => $posts->first()->body
+                                'body' => $posts->last()->body
                             ]
                         ]
                     ],
                     [
                         'data' => [
                             'type' => 'posts',
-                            'post_id' => $posts->last()->id,
+                            'post_id' => $posts->first()->id,
                             'attributes' => [
-                                'body' => $posts->last()->body
+                                'body' => $posts->first()->body
                             ]
                         ]
                     ]
@@ -53,8 +53,31 @@ class RetrievePostTest extends TestCase
                     'self' => url('/posts')
                 ]
             ]);
+    }
 
+    public function test_a_user_can_only_retrieve_his_own_post()
+    {
+        $this->withoutExceptionHandling();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
 
+        $post = Post::factory()->create([
+            'user_id' => $user1->id
+        ]);
 
+        $response = $this
+            ->actingAs($user2, 'api')
+            ->get('/api/posts');
+
+        $response->assertStatus(200)
+            ->assertExactJson([
+                'data' => [],
+                'links' => [
+                    'self' => url('/posts')
+                ]
+            ]);
+
+        // assert json just checks the structure
+        // to exactly match the json => this->assertExactJson
     }
 }
