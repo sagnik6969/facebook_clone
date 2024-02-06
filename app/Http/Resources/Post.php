@@ -18,9 +18,9 @@ class Post extends JsonResource
         return [
             'data' => [
                 'type' => 'posts',
-                'posted_by' => new UserResource($this->user),
                 'post_id' => $this->id,
                 'attributes' => [
+                    'posted_by' => new UserResource($this->user),
                     'body' => $this->body
                 ]
             ],
