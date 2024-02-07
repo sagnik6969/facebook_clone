@@ -5,7 +5,7 @@ export default createRouter({
     history: createWebHistory(),
     routes: [
         { path: "/", name: "home", component: NewsFeed },
-        { path: "/user/:userId", name: "user.show", component: UserShow },
+        { path: "/users/:userId", name: "user.show", component: UserShow },
     ],
 });
 
