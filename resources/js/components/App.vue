@@ -22,6 +22,9 @@ import { useRoute } from "vue-router";
 const store = useStore();
 const route = useRoute();
 
+// watch effect will execute when
+// 1. First time when component is loaded
+// 2. when the variables used inside the function changes.
 watchEffect(() => {
     store.dispatch("setPageTitle", route.meta.title);
 });

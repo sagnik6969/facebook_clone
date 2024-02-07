@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,22 +18,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+
+    public function friends(): BelongsToMany
+    {
+        return $this->belongsToMany(Friend::class, 'friends', 'friend_id', 'user_id');
+        // friends => name of the join table 
+        // friend_id => column in join table which defines relation to the other table
+        // user_id => column in the join table which defines relationship with current table
+    }
+
     protected $fillable = [
         'name',
         'email',
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+
     protected $hidden = [
         'password',
         'remember_token',
