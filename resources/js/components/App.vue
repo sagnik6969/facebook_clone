@@ -13,8 +13,22 @@
 </template>
 
 <script setup>
+import { onMounted, watch, watchEffect } from "vue";
 import Nav from "./Nav.vue";
 import Sidebar from "./Sidebar.vue";
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
+
+const store = useStore();
+const route = useRoute();
+
+watchEffect(() => {
+    store.dispatch("setPageTitle", route.meta.title);
+});
+
+onMounted(() => {
+    store.dispatch("fetchAuthUser");
+});
 </script>
 
 <style></style>

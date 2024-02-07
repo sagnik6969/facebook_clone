@@ -8,6 +8,7 @@ import "./bootstrap";
 import { createApp } from "vue";
 import App from "./components/App.vue";
 import router from "./router";
+import store from "./store";
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
@@ -38,5 +39,6 @@ app.component("App", App);
  */
 
 app.use(router);
+app.use(store);
 
 app.mount("#app");
