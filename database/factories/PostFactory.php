@@ -17,7 +17,8 @@ class PostFactory extends Factory
     public function definition(): array
     {
         return [
-            'body' => fake()->text()
+            'body' => fake()->text(),
+            'image' => collect([null, 'https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'])->random()
         ];
     }
 }
