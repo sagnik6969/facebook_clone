@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\FriendRequestNotFoundException;
 use App\Models\Friend;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class FriendRequestResponseController extends Controller
@@ -12,9 +14,13 @@ class FriendRequestResponseController extends Controller
         $userId = $request->user_id;
         $friendId = auth()->user()->id;
 
-        $friendRequest = Friend::where('user_id', $userId)
-            ->where('friend_id', $friendId)
-            ->firstOrFail();
+        try {
+            $friendRequest = Friend::where('user_id', $userId)
+                ->where('friend_id', $friendId)
+                ->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            throw new FriendRequestNotFoundException();
+        }
 
         $friendRequest->update([
             'confirmed_at' => now(),

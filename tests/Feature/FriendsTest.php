@@ -122,4 +122,65 @@ class FriendsTest extends TestCase
         ]);
 
     }
+
+    public function test_only_valid_requests_can_be_accepted()
+    {
+        $user = User::factory()->create();
+
+        $response = $this
+            ->actingAs($user, 'api')
+            ->post('/api/friend-request-response', [
+                'user_id' => 123444,
+                'status' => 1
+            ]);
+
+        $response->assertStatus(404);
+
+        $friendsRequest = Friend::first();
+        $this->assertNull($friendsRequest);
+
+
+        $response->assertJson([
+            'errors' => [
+                'code' => 404,
+                'title' => 'Friend Not Found',
+                'detail' => 'Unable to locate the friend with the given information.',
+            ]
+        ]);
+
+    }
+
+    public function test_only_the_recipient_can_accept_a_friends_request()
+    {
+        $user = User::factory()->create();
+        $friend = User::factory()->create();
+
+        $this
+            ->actingAs($user, 'api')
+            ->post('/api/friend-request', [
+                'friend_id' => $friend->id
+            ])->assertStatus(200);
+
+        $response = $this
+            ->actingAs(User::factory()->create(), 'api')
+            ->post('/api/friend-request-response', [
+                'user_id' => $user->id,
+                'status' => 1
+            ])->assertStatus(404);
+
+
+        $friendsRequest = Friend::first();
+        $this->assertNull($friendsRequest->confirmed_at);
+        $this->assertNull($friendsRequest->status);
+
+
+        $response->assertJson([
+            'errors' => [
+                'code' => 404,
+                'title' => 'Friend Not Found',
+                'detail' => 'Unable to locate the friend with the given information.',
+            ]
+        ]);
+
+    }
 }
