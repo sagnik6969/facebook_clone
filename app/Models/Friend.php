@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +13,23 @@ class Friend extends Model
     protected $casts = [
         'confirmed_at' => 'datetime',
         // tells laravel that confirmed at is a datetime so that we can
-        // laravel can cast it into Carbon class => which allows us to use diffForHumans() function. 
+        // laravel can cast it into Carbon class => which allows us to use diffForHumans() function.
     ];
+
+    public static function friendship($id): ?static
+    {
+        return static::where(
+            fn(Builder $query) =>
+            $query->where('user_id', auth()->user()->id)
+                ->where('friend_id', $id)
+        )
+            ->orWhere(
+                fn(Builder $query) =>
+                $query->where('user_id', $id)
+                    ->where('friend_id', auth()->user()->id)
+            )
+            ->first();
+    }
+
+
 }
