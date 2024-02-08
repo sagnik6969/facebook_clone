@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\UserNotFoundException;
 use App\Models\Friend;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class FriendRequestController extends Controller
@@ -18,7 +20,14 @@ class FriendRequestController extends Controller
         // ]);
         // the bellow code is equivalent to above code 
         // attach => Attach a model to the parent.
-        User::find($friendId)->friends()->attach(auth()->user());
+
+        try {
+            User::findOrFail($friendId)->friends()->attach(auth()->user());
+
+        } catch (ModelNotFoundException $e) {
+            throw new UserNotFoundException();
+        }
+
 
 
         return new \App\Http\Resources\Friend(
