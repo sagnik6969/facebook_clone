@@ -6,6 +6,7 @@ use App\Models\Friend;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class FriendsTest extends TestCase
@@ -70,6 +71,53 @@ class FriendsTest extends TestCase
                 'code' => 404,
                 'title' => 'User Not Found',
                 'detail' => 'Unable to locate the user with the given information.',
+            ]
+        ]);
+
+    }
+
+    public function test_friend_request_can_be_accepted()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        $friend = User::factory()->create();
+
+        $this
+            ->actingAs($user, 'api')
+            ->post('/api/friend-request', [
+                'friend_id' => $friend->id
+            ]);
+
+        $response = $this
+            ->actingAs($friend, 'api')
+            ->post('/api/friend-request-response', [
+                'user_id' => $user->id,
+                'status' => 1
+            ]);
+
+        $response->assertStatus(200);
+
+        $friendsRequest = Friend::first();
+
+        $this->assertNotNull($friendsRequest->confirmed_at);
+        $this->assertInstanceOf(Carbon::class, $friendsRequest->confirmed_at);
+        $this->assertEquals(now()->startOfSecond(), $friendsRequest->confirmed_at);
+        //startOfSecond => Modify to start of current second, microseconds become 0
+        $this->assertEquals($friend->id, $friendsRequest->friend_id);
+        $this->assertEquals($user->id, $friendsRequest->user_id);
+        $this->assertEquals(1, $friendsRequest->status);
+
+        $response->assertJson([
+            'data' => [
+                'type' => 'friend-request',
+                'friend_request_id' => $friendsRequest->id,
+                'attributes' => [
+                    'confirmed_at' => $friendsRequest->confirmed_at->diffForHumans(),
+                ]
+            ],
+            'links' => [
+                'self' => url('/users/' . $friendsRequest->friend_id),
             ]
         ]);
 

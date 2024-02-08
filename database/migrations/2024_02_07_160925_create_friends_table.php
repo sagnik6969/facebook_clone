@@ -14,8 +14,13 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('friend_id');
+
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('friend_id')->references('id')->on('users');
+
+            $table->tinyInteger('status')->nullable();
+            $table->timestamp('confirmed_at')->nullable();
+
             $table->timestamps();
         });
     }
