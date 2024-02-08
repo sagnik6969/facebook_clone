@@ -11,6 +11,11 @@ class FriendRequestResponseController extends Controller
 {
     public function store(Request $request)
     {
+        $request->validate([
+            'user_id' => 'required',
+            'status' => 'required'
+        ]);
+
         $userId = $request->user_id;
         $friendId = auth()->user()->id;
 

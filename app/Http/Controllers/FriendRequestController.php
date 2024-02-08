@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\UserNotFoundException;
+use App\Exceptions\ValidationErrorException;
 use App\Models\Friend;
 use App\Models\User;
+use \Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
@@ -12,6 +14,19 @@ class FriendRequestController extends Controller
 {
     public function store(Request $request)
     {
+        // throw new ValidationException('abc');
+
+        // try {
+        $request->validate([
+            'friend_id' => 'required'
+        ]);
+        // we are not using try catch block because we are handling the exception in 
+        // Handler.php
+
+        // } catch (ValidationException $e) {
+        //     throw new ValidationErrorException(json_encode($e->getMessage()));
+        // }
+
         $friendId = $request->friend_id;
 
         // Friend::create([
