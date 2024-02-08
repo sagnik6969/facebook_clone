@@ -24,6 +24,13 @@
                     {{ user?.data?.attributes?.name }}
                 </p>
             </div>
+            <div
+                class="absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-20"
+            >
+                <button class="py-1 px-3 bg-gray-400 rounded">
+                    Add Friend
+                </button>
+            </div>
         </div>
 
         <p v-if="postLoading">Loading posts...</p>
@@ -43,29 +50,32 @@
 <script setup>
 import Post from "../../components/Post.vue";
 import axios from "axios";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 
 const route = useRoute();
+const store = useStore();
 
 const loading = ref(true);
-const user = ref(null);
+const user = computed(() => store.getters.profileUser);
 
 const posts = ref([]);
 const postLoading = ref(true);
 
 onMounted(() => {
-    axios
-        .get(`/api/users/${route.params.userId}`)
-        .then((res) => {
-            user.value = res.data;
-        })
-        .catch(() => {
-            console.log("unable to fetch users");
-        })
-        .finally(() => {
-            loading.value = false;
-        });
+    store.dispatch("fetchProfileUser", route.params.userId);
+    // axios
+    //     .get(`/api/users/${route.params.userId}`)
+    //     .then((res) => {
+    //         user.value = res.data;
+    //     })
+    //     .catch(() => {
+    //         console.log("unable to fetch users");
+    //     })
+    //     .finally(() => {
+    //         loading.value = false;
+    //     });
 
     axios
         .get(`/api/users/${route.params.userId}/posts`)
