@@ -10,7 +10,7 @@
                     />
                 </div>
             </div>
-            <div class="flex-1 mx-4">
+            <div class="flex flex-1 mx-4">
                 <input
                     type="text"
                     name="body"
