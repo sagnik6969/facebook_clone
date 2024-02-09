@@ -2,11 +2,18 @@
     <div class="flex flex-col items-center py-4">
         <NewPost />
 
-        <p v-if="loading">Loading....</p>
+        <p
+            v-if="
+                !$store.getters.newsStatus ||
+                $store.getters.newsStatus == 'loading'
+            "
+        >
+            Loading....
+        </p>
 
         <Post
             v-else
-            v-for="post in posts.data"
+            v-for="post in $store.getters.newsPosts.data"
             :key="post?.data?.post_id"
             :post="post"
         />
@@ -18,22 +25,26 @@ import { onMounted, ref } from "vue";
 import NewPost from "../components/NewPost.vue";
 import Post from "../components/Post.vue";
 import axios from "axios";
+import { useStore } from "vuex";
+
+const store = useStore();
 
 const posts = ref([]);
 const loading = ref(true);
 
 onMounted(() => {
-    axios
-        .get("/api/posts")
-        .then((res) => {
-            posts.value = res.data;
-            loading.value = false;
-            // console.log(res.data);
-        })
-        .catch((error) => {
-            console.log("unable to fetch posts");
-            loading.value = false;
-        });
+    store.dispatch("fetchNewsPosts");
+    // axios
+    //     .get("/api/posts")
+    //     .then((res) => {
+    //         posts.value = res.data;
+    //         loading.value = false;
+    //         // console.log(res.data);
+    //     })
+    //     .catch((error) => {
+    //         console.log("unable to fetch posts");
+    //         loading.value = false;
+    //     });
 });
 </script>
 
