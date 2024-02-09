@@ -7,6 +7,7 @@
 
             <div class="overflow-x-hidden w-2/3">
                 <router-view :key="$route.fullPath"></router-view>
+                <!-- without the key vue wont reRender the page when  params change -->
             </div>
         </div>
     </div>
