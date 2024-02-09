@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col items-center">
+    <div v-if="$store.getters.profileUser" class="flex flex-col items-center">
         <div class="relative mb-8">
             <div class="w-100 h-64 overflow-hidden z-10">
                 <img
@@ -28,7 +28,10 @@
                 class="absolute flex items-center bottom-0 right-0 mb-4 mr-12 z-20"
             >
                 <button
-                    v-if="$store.getters.friendButtonText"
+                    v-if="
+                        $store.getters.friendButtonText &&
+                        $store.getters.friendButtonText != 'Accept'
+                    "
                     class="py-1 px-3 bg-gray-400 rounded"
                     @click="
                         $store.dispatch(
@@ -38,6 +41,36 @@
                     "
                 >
                     {{ $store.getters.friendButtonText }}
+                </button>
+                <button
+                    class="mr-2 py-1 px-3 bg-blue-500 rounded"
+                    v-if="
+                        $store.getters.friendButtonText &&
+                        $store.getters.friendButtonText == 'Accept'
+                    "
+                    @click="
+                        $store.dispatch(
+                            'acceptFriendRequest',
+                            $route.params.userId
+                        )
+                    "
+                >
+                    Accept
+                </button>
+                <button
+                    class="py-1 px-3 bg-gray-400 rounded"
+                    v-if="
+                        $store.getters.friendButtonText &&
+                        $store.getters.friendButtonText == 'Accept'
+                    "
+                    @click="
+                        $store.dispatch(
+                            'ignoreFriendRequest',
+                            $route.params.userId
+                        )
+                    "
+                >
+                    Ignore
                 </button>
             </div>
         </div>

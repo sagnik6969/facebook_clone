@@ -1,5 +1,8 @@
 <template>
-    <div class="flex flex-col flex-1 h-screen overflow-y-hidden">
+    <div
+        v-if="$store.getters.authUser"
+        class="flex flex-col flex-1 h-screen overflow-y-hidden"
+    >
         <Nav />
 
         <div class="flex overflow-y-hidden flex-1">

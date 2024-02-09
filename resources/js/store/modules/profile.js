@@ -10,13 +10,28 @@ const getters = {
     profileUser(state) {
         return state.profileUser;
     },
-    friendButtonText(_, getters) {
+    friendButtonText(_, getters, rootState) {
+        // console.log("friend request button text");
+        // console.log(
+        //     !getters.friendShip.data.attributes.confirmed_at &&
+        //         getters.friendShip.data.attributes.friend_id !=
+        //             rootState.user.user.data.user_id
+        // );
         if (!getters.friendShip) return "Add Friend";
-        else if (!getters.friendShip.data.attributes.confirmed_at)
+        else if (
+            !getters.friendShip.data.attributes.confirmed_at &&
+            getters.friendShip.data.attributes.friend_id !=
+                rootState.user.user.data.user_id
+        )
             return "Pending Friend Request";
+        else if (getters.friendShip.data.attributes.confirmed_at) {
+            return "";
+        }
+
+        return "Accept";
     },
     friendShip(state) {
-        return state.profileUser?.data?.attributes?.friendship;
+        return state.profileUser.data.attributes.friendship;
         // getters are like computed properties getters are automatically updated
         // when its dependencies get updated.
     },
@@ -32,7 +47,7 @@ const mutations = {
         state.friendButtonText = text;
     },
     setUserFriendship(state, friendShip) {
-        console.log(friendShip);
+        // console.log(friendShip);
         state.profileUser.data.attributes.friendship = friendShip;
     },
 };
@@ -60,7 +75,39 @@ const actions = {
                 context.commit("setUserFriendship", res.data);
             })
             .catch((err) => {
-                context.commit("setButtonText", "Add Friend");
+                console.log("unable to send friends request");
+                // context.commit("setButtonText", "Add Friend");
+            });
+    },
+    acceptFriendRequest(context, friendId) {
+        axios
+            .post("/api/friend-request-response", {
+                user_id: friendId,
+                status: 1,
+            })
+            .then((res) => {
+                context.commit("setUserFriendship", res.data);
+            })
+            .catch((err) => {
+                console.log("unable to accept friend request");
+            });
+    },
+
+    ignoreFriendRequest(context, friendId) {
+        axios
+            .delete("/api/friend-request-response/delete", {
+                data: {
+                    user_id: friendId,
+                    status: 1,
+                },
+                // in axios delete method works in slightly different way
+                // here to pass data => we have to use above syntax
+            })
+            .then((res) => {
+                context.commit("setUserFriendship", null);
+            })
+            .catch((err) => {
+                console.log("unable to accept friend request");
             });
     },
 };
