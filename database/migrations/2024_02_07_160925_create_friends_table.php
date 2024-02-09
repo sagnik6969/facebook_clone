@@ -17,6 +17,7 @@ return new class extends Migration {
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('friend_id')->references('id')->on('users');
+            $table->unique(['user_id', 'friend_id']);
 
             $table->tinyInteger('status')->nullable();
             $table->timestamp('confirmed_at')->nullable();

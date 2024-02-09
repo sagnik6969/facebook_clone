@@ -37,7 +37,10 @@ class FriendRequestController extends Controller
         // attach => Attach a model to the parent.
 
         try {
-            User::findOrFail($friendId)->friends()->attach(auth()->user());
+            User::findOrFail($friendId)->friends()
+                ->syncWithoutDetaching(auth()->user());
+            // checks if the records are already linked 
+            // if they are not linked then only it adds them to the database.
 
         } catch (ModelNotFoundException $e) {
             throw new UserNotFoundException();

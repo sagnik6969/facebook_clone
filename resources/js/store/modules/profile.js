@@ -11,7 +11,10 @@ const getters = {
     profileUser(state) {
         return state.profileUser;
     },
-    friendButtonText(_, getters, rootState) {
+    friendButtonText(state, getters, rootState) {
+        if (state.profileUser.data.user_id == rootState.user.user.data.user_id)
+            return "";
+
         if (!getters.friendShip) return "Add Friend";
         else if (
             !getters.friendShip.data.attributes.confirmed_at &&
@@ -78,6 +81,8 @@ const actions = {
     },
 
     sendFriendsRequest(context, friendId) {
+        if (context.getters.friendButtonText != "Add Friend") return;
+
         axios
             .post("/api/friend-request", { friend_id: friendId })
             .then((res) => {
