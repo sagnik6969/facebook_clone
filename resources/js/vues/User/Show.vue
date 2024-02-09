@@ -75,18 +75,24 @@
             </div>
         </div>
 
-        <p v-if="postLoading">Loading posts...</p>
+        <p
+            v-if="
+                !$store.getters.status.posts ||
+                $store.getters.status.posts == 'loading'
+            "
+        >
+            Loading posts...
+        </p>
+        <p v-else-if="$store.getters.posts.data.length < 1">
+            No posts found. Get started...
+        </p>
 
         <Post
             v-else
-            v-for="post in posts.data"
+            v-for="post in $store.getters.posts.data"
             :key="post.data.post_id"
             :post="post"
         />
-
-        <p v-if="!postLoading && posts.data.length < 1">
-            No posts found. Get started...
-        </p>
     </div>
 </template>
 <script setup>
@@ -107,6 +113,7 @@ const postLoading = ref(true);
 
 onMounted(() => {
     store.dispatch("fetchProfileUser", route.params.userId);
+    store.dispatch("fetchUserPost", route.params.userId);
     // axios
     //     .get(`/api/users/${route.params.userId}`)
     //     .then((res) => {

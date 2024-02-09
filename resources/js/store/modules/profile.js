@@ -3,7 +3,8 @@ import axios from "axios";
 const state = () => ({
     profileUser: null,
     profileUserStatus: null,
-    friendButtonText: null,
+    posts: [],
+    postsStatus: null,
 });
 
 const getters = {
@@ -11,12 +12,6 @@ const getters = {
         return state.profileUser;
     },
     friendButtonText(_, getters, rootState) {
-        // console.log("friend request button text");
-        // console.log(
-        //     !getters.friendShip.data.attributes.confirmed_at &&
-        //         getters.friendShip.data.attributes.friend_id !=
-        //             rootState.user.user.data.user_id
-        // );
         if (!getters.friendShip) return "Add Friend";
         else if (
             !getters.friendShip.data.attributes.confirmed_at &&
@@ -35,6 +30,17 @@ const getters = {
         // getters are like computed properties getters are automatically updated
         // when its dependencies get updated.
     },
+
+    status(state) {
+        return {
+            user: state.userStatus,
+            posts: state.postsStatus,
+        };
+    },
+
+    posts(state) {
+        return state.posts;
+    },
 };
 const mutations = {
     setProfileUser(state, user) {
@@ -43,12 +49,15 @@ const mutations = {
     setProfileUserStatus(state, userStatus) {
         state.profileUserStatus = userStatus;
     },
-    setButtonText(state, text) {
-        state.friendButtonText = text;
-    },
     setUserFriendship(state, friendShip) {
         // console.log(friendShip);
         state.profileUser.data.attributes.friendship = friendShip;
+    },
+    setPosts(state, posts) {
+        state.posts = posts;
+    },
+    setPostsStatus(state, postsStatus) {
+        state.postsStatus = postsStatus;
     },
 };
 const actions = {
@@ -108,6 +117,20 @@ const actions = {
             })
             .catch((err) => {
                 console.log("unable to accept friend request");
+            });
+    },
+    fetchUserPost(context, userId) {
+        context.commit("setPostsStatus", "loading");
+
+        axios
+            .get(`/api/users/${userId}/posts`)
+            .then((res) => {
+                context.commit("setPostsStatus", "success");
+                context.commit("setPosts", res.data);
+            })
+            .catch(() => {
+                context.commit("setPostsStatus", "error");
+                console.log("unable to fetch posts");
             });
     },
 };
