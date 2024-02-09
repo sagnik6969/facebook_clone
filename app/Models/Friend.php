@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,6 +30,18 @@ class Friend extends Model
                     ->where('friend_id', auth()->user()->id)
             )
             ->first();
+    }
+
+    public static function friendships(): Collection
+    {
+        return static::whereNotNull('confirmed_at')
+            ->where(
+                fn(Builder $query) =>
+                $query
+                    ->where('user_id', auth()->user()->id)
+                    ->orWhere('friend_id', auth()->user()->id)
+            )->get();
+
     }
 
 
