@@ -10,11 +10,15 @@ const getters = {
     profileUser(state) {
         return state.profileUser;
     },
-    friendButtonText(state) {
-        return state.friendButtonText;
+    friendButtonText(_, getters) {
+        if (!getters.friendShip) return "Add Friend";
+        else if (!getters.friendShip.data.attributes.confirmed_at)
+            return "Pending Friend Request";
     },
     friendShip(state) {
         return state.profileUser?.data?.attributes?.friendship;
+        // getters are like computed properties getters are automatically updated
+        // when its dependencies get updated.
     },
 };
 const mutations = {
@@ -27,6 +31,10 @@ const mutations = {
     setButtonText(state, text) {
         state.friendButtonText = text;
     },
+    setUserFriendship(state, friendShip) {
+        console.log(friendShip);
+        state.profileUser.data.attributes.friendship = friendShip;
+    },
 };
 const actions = {
     fetchProfileUser(context, userId) {
@@ -37,7 +45,7 @@ const actions = {
             .then((res) => {
                 context.commit("setProfileUser", res.data);
                 context.commit("setProfileUserStatus", "success");
-                context.dispatch("setFriendButton");
+                // context.dispatch("setFriendButton");
             })
             .catch(() => {
                 console.log("unable to fetch user");
@@ -45,19 +53,11 @@ const actions = {
             });
     },
 
-    setFriendButton(context) {
-        if (!context.getters.friendShip)
-            context.commit("setButtonText", "Add Friend");
-        else if (!context.getters.friendShip.data.attributes.confirmed_at) {
-            context.commit("setButtonText", "Pending Friend Request");
-        }
-    },
-
     sendFriendsRequest(context, friendId) {
         axios
             .post("/api/friend-request", { friend_id: friendId })
             .then((res) => {
-                context.commit("setButtonText", "Pending Friend Request");
+                context.commit("setUserFriendship", res.data);
             })
             .catch((err) => {
                 context.commit("setButtonText", "Add Friend");
