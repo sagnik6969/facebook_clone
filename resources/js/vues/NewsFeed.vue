@@ -13,8 +13,8 @@
 
         <Post
             v-else
-            v-for="post in $store.getters.newsPosts.data"
-            :key="post?.data?.post_id"
+            v-for="(post, postKey) in $store.getters.newsPosts.data"
+            :key="postKey"
             :post="post"
         />
     </div>
