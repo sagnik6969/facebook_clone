@@ -21,10 +21,15 @@ class User extends Authenticatable
 
     public function friends(): BelongsToMany
     {
-        return $this->belongsToMany(Friend::class, 'friends', 'friend_id', 'user_id');
+        return $this->belongsToMany(User::class, 'friends', 'friend_id', 'user_id');
         // friends => name of the join table 
-        // friend_id => column in join table which defines relation to the other table
-        // user_id => column in the join table which defines relationship with current table
+        // friend_id => column in join table which defines relation to the current table
+        // user_id => column in the join table which defines relationship with other table
+    }
+
+    public function likedPosts(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'likes', 'user_id', 'post_id');
     }
 
     protected $fillable = [
