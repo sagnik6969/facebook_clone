@@ -12,14 +12,21 @@
             </div>
             <div class="flex flex-1 mx-4">
                 <input
+                    v-model="postMessage"
                     type="text"
                     name="body"
                     class="w-full pl-4 h-8 bg-gray-200 rounded-full focus:outline-none focus:shadow-outline text-sm"
                     placeholder="Add a post"
                 />
-                <button class="bg-gray-200 ml-2 px-3 py-1 rounded-full">
-                    Post
-                </button>
+                <transition name="fade">
+                    <button
+                        v-if="postMessage"
+                        class="bg-gray-200 ml-2 px-3 py-1 rounded-full"
+                        @click="$store.dispatch('postMessage')"
+                    >
+                        Post
+                    </button>
+                </transition>
             </div>
             <div>
                 <button
@@ -40,10 +47,26 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "NewPost",
-};
+<script setup>
+import { computed } from "vue";
+import { useStore } from "vuex";
+const store = useStore();
+
+const postMessage = computed({
+    get: () => store.getters.postMessage,
+    set: (val) => store.commit("updateMessage", val),
+});
+
+// The above syntax should be used if you want to apply v-model in a store state => variable.
 </script>
 
-<style scoped></style>
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s;
+}
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+</style>

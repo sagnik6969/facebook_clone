@@ -1,6 +1,9 @@
+import axios from "axios";
+
 const state = () => ({
     newsPosts: null,
     newsPostsStatus: null,
+    postMessage: "",
 });
 const getters = {
     newsPosts(state) {
@@ -9,6 +12,9 @@ const getters = {
     newsStatus(state) {
         return state.newsPostsStatus;
     },
+    postMessage(state) {
+        return state.postMessage;
+    },
 };
 const mutations = {
     setPosts(state, newsPosts) {
@@ -16,6 +22,12 @@ const mutations = {
     },
     setPostsStatus(state, status) {
         state.newsPostsStatus = status;
+    },
+    updateMessage(state, message) {
+        state.postMessage = message;
+    },
+    pushPost(state, post) {
+        state.newsPosts.data.unshift(post);
     },
 };
 const actions = {
@@ -30,6 +42,20 @@ const actions = {
             .catch((error) => {
                 console.log("unable to fetch posts");
                 context.commit("setPostsStatus", "error");
+            });
+    },
+    postMessage(context) {
+        context.commit("setPostsStatus", "loading");
+        axios
+            .post("/api/posts", { body: context.state.postMessage })
+            .then((res) => {
+                context.commit("pushPost", res.data);
+                context.commit("updateMessage", "");
+                context.commit("setPostsStatus", "success");
+            })
+            .catch((err) => {
+                console.log("unable to post");
+                context.commit("setPostsStatus", "failure");
             });
     },
 };
