@@ -80,6 +80,7 @@
             </button>
             <button
                 class="flex justify-center py-2 rounded-lg text-sm text-gray-700 w-full hover:bg-gray-200"
+                @click="comments = !comments"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -93,15 +94,71 @@
                 <p class="ml-2">Comment</p>
             </button>
         </div>
+
+        <div v-if="comments" class="border-t border-gray-400 p-4 pt-2">
+            <div class="flex">
+                <input
+                    v-model="commentBody"
+                    type="text"
+                    name="comment"
+                    class="w-full pl-4 h-8 bg-gray-200 rounded-lg focus:outline-none"
+                />
+                <button
+                    v-if="commentBody"
+                    class="bg-gray-200 ml-2 px-2 py-1 rounded-lg focus:outline-none"
+                >
+                    Post
+                </button>
+            </div>
+
+            <div
+                class="flex my-4 items-center"
+                v-for="comment in post.data.attributes.comments.data"
+                :key="comment.id"
+            >
+                <div class="w-8">
+                    <img
+                        src="https://cdn.pixabay.com/photo/2014/07/09/10/04/man-388104_960_720.jpg"
+                        alt="profile image for user"
+                        class="w-8 h-8 object-cover rounded-full"
+                    />
+                </div>
+                <div class="ml-4 flex-1">
+                    <div class="bg-gray-200 rounded-lg p-2 text-sm">
+                        <a
+                            class="font-bold text-blue-700"
+                            :href="
+                                '/users/' +
+                                comment.data.attributes.commented_by.data
+                                    .user_id
+                            "
+                        >
+                            {{
+                                comment.data.attributes.commented_by.data
+                                    .attributes.name
+                            }}
+                        </a>
+                        <p class="inline">
+                            {{ comment.data.attributes.body }}
+                        </p>
+                    </div>
+                    <div class="text-xs pl-2">
+                        <p>{{ comment.data.attributes.commented_at }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
 const props = defineProps(["post"]);
 import { getCurrentInstance } from "vue";
 const key = getCurrentInstance().vnode.key;
+const comments = ref(false);
+const commentBody = ref("");
 // onMounted(() => console.log(props.post.data.posted_by.data.attributes.name));
 </script>
 
