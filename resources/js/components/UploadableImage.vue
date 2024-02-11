@@ -1,7 +1,7 @@
 <template>
     <div>
         <img
-            :src="imageObject.data.attributes.path"
+            :src="userImage.data.attributes.path"
             alt="user background image"
             ref="userImage"
             class="object-cover w-full"
@@ -12,6 +12,11 @@
 <script setup>
 import Dropzone from "dropzone";
 import { computed, getCurrentInstance, onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
+
+const store = useStore();
+const route = useRoute();
 
 const props = defineProps([
     "imageWidth",
@@ -40,7 +45,9 @@ const settings = computed(() => {
         },
         success: (e, res) => {
             alert("uploaded!");
-            uploadedImage.value = res;
+            store.dispatch("fetchAuthUser");
+            store.dispatch("fetchProfileUser", route.params.userId);
+            store.dispatch("fetchUserPost", route.params.userId);
         },
     };
 });
@@ -52,9 +59,5 @@ onMounted(() => {
         // above is the syntax how you access $refs in composition api
         settings.value
     );
-});
-
-const imageObject = computed(() => {
-    return uploadedImage.value || props.userImage;
 });
 </script>

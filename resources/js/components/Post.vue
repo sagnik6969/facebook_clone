@@ -4,7 +4,10 @@
             <div class="flex items-center">
                 <div class="w-8">
                     <img
-                        src="https://cdn.pixabay.com/photo/2014/07/09/10/04/man-388104_960_720.jpg"
+                        :src="
+                            post.data.attributes.posted_by.data.attributes
+                                .profile_image.data.attributes.path
+                        "
                         alt="profile image for user"
                         class="w-8 h-8 object-cover rounded-full"
                     />
@@ -125,7 +128,10 @@
             >
                 <div class="w-8">
                     <img
-                        src="https://cdn.pixabay.com/photo/2014/07/09/10/04/man-388104_960_720.jpg"
+                        :src="
+                            comment.data.attributes.commented_by.data.attributes
+                                .profile_image.data.attributes.path
+                        "
                         alt="profile image for user"
                         class="w-8 h-8 object-cover rounded-full"
                     />
