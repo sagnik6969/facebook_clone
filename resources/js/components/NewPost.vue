@@ -86,6 +86,7 @@ const settings = computed(() => ({
     previewsContainer: ".dropzone-previews",
     previewTemplate: document.querySelector("#dz-template").innerHTML,
     autoProcessQueue: false,
+    maxFiles: 1,
     params: {
         width: 1000,
         height: 1000,
@@ -101,6 +102,10 @@ const settings = computed(() => ({
         // alert("success");
         dropzone.value.removeAllFiles();
         store.commit("pushPost", res);
+    },
+    maxfilesexceeded: (file) => {
+        dropzone.value.removeAllFiles();
+        dropzone.value.addFile(file);
     },
 }));
 
