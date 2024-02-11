@@ -2,11 +2,16 @@
     <div v-if="$store.getters.profileUser" class="flex flex-col items-center">
         <div class="relative mb-8">
             <div class="w-100 h-64 overflow-hidden z-10">
-                <img
+                <!-- <img
                     src="https://cdn.pixabay.com/photo/2017/03/26/12/13/countryside-2175353_960_720.jpg"
                     alt="user background image"
                     class="object-cover w-full"
-                />
+                /> -->
+                <uploadable-image
+                    image-width="1500"
+                    image-height="300"
+                    location="cover"
+                ></uploadable-image>
             </div>
 
             <div
@@ -101,6 +106,7 @@ import axios from "axios";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
+import UploadableImage from "../../components/UploadableImage.vue";
 
 const route = useRoute();
 const store = useStore();
