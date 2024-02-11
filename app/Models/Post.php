@@ -28,7 +28,7 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
-    protected $fillable = ['body'];
+    protected $guarded = [];
 
     protected static function booted()
     {

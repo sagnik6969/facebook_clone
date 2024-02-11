@@ -6,14 +6,21 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class PostToTimelineTest extends TestCase
 {
-    use RefreshDatabase; // refreshes the database in every test
-    /**
-     * A basic feature test example.
-     */
+    use RefreshDatabase;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        Storage::fake('public');
+
+    }
+
     public function test_a_user_can_create_a_text_post()
     {
         $this->withoutExceptionHandling();
@@ -57,6 +64,44 @@ class PostToTimelineTest extends TestCase
                 ]
             ]);
         // expected status code is mentioned in https://jsonapi.org/
+
+    }
+
+    public function test_a_user_can_create_a_text_post_with_an_image()
+    {
+        $this->withoutExceptionHandling();
+        // the above code makes the error much clearer
+        $user = User::factory()->create();
+        $file = UploadedFile::fake()->image('user-image.jpg');
+
+        $response = $this->actingAs(
+            $user,
+            'api'
+        )
+            ->post('/api/posts', [
+                'body' => 'Testing Body',
+                'image' => $file,
+                'width' => 100,
+                'height' => 100,
+            ]);
+
+        $response->assertStatus(201);
+
+        Storage::disk('public')
+            ->assertExists('post-images/' . $file->hashName());
+
+
+        $response->assertStatus(201)
+            ->assertJson([
+                'data' => [
+
+                    'attributes' => [
+                        'body' => 'Testing Body',
+                        'image' => url('post-images/' . $file->hashName())
+
+                    ]
+                ],
+            ]);
 
     }
 }
