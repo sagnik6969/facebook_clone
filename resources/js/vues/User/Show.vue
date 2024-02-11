@@ -89,8 +89,8 @@
 
         <Post
             v-else
-            v-for="post in $store.getters.posts.data"
-            :key="post.data.post_id"
+            v-for="(post, postKey) in $store.getters.posts.data"
+            :key="postKey"
             :post="post"
         />
     </div>
@@ -114,28 +114,5 @@ const postLoading = ref(true);
 onMounted(() => {
     store.dispatch("fetchProfileUser", route.params.userId);
     store.dispatch("fetchUserPost", route.params.userId);
-    // axios
-    //     .get(`/api/users/${route.params.userId}`)
-    //     .then((res) => {
-    //         user.value = res.data;
-    //     })
-    //     .catch(() => {
-    //         console.log("unable to fetch users");
-    //     })
-    //     .finally(() => {
-    //         loading.value = false;
-    //     });
-
-    axios
-        .get(`/api/users/${route.params.userId}/posts`)
-        .then((res) => {
-            posts.value = res.data;
-        })
-        .catch(() => {
-            console.log("unable to fetch posts");
-        })
-        .finally(() => {
-            postLoading.value = false;
-        });
 });
 </script>

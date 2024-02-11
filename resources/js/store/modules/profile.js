@@ -3,8 +3,6 @@ import axios from "axios";
 const state = () => ({
     profileUser: null,
     profileUserStatus: null,
-    posts: [],
-    postsStatus: null,
 });
 
 const getters = {
@@ -34,16 +32,16 @@ const getters = {
         // when its dependencies get updated.
     },
 
-    status(state) {
+    status(state, _, rootState) {
         return {
             user: state.userStatus,
-            posts: state.postsStatus,
+            posts: rootState.posts.postsStatus,
         };
     },
 
-    posts(state) {
-        return state.posts;
-    },
+    // posts(state) {
+    //     return state.posts;
+    // },
 };
 const mutations = {
     setProfileUser(state, user) {
@@ -55,12 +53,6 @@ const mutations = {
     setUserFriendship(state, friendShip) {
         // console.log(friendShip);
         state.profileUser.data.attributes.friendship = friendShip;
-    },
-    setPosts(state, posts) {
-        state.posts = posts;
-    },
-    setPostsStatus(state, postsStatus) {
-        state.postsStatus = postsStatus;
     },
 };
 const actions = {
@@ -122,20 +114,6 @@ const actions = {
             })
             .catch((err) => {
                 console.log("unable to accept friend request");
-            });
-    },
-    fetchUserPost(context, userId) {
-        context.commit("setPostsStatus", "loading");
-
-        axios
-            .get(`/api/users/${userId}/posts`)
-            .then((res) => {
-                context.commit("setPostsStatus", "success");
-                context.commit("setPosts", res.data);
-            })
-            .catch(() => {
-                context.commit("setPostsStatus", "error");
-                console.log("unable to fetch posts");
             });
     },
 };

@@ -13,7 +13,7 @@
 
         <Post
             v-else
-            v-for="(post, postKey) in $store.getters.newsPosts.data"
+            v-for="(post, postKey) in $store.getters.posts.data"
             :key="postKey"
             :post="post"
         />
@@ -33,7 +33,7 @@ const posts = ref([]);
 const loading = ref(true);
 
 onMounted(() => {
-    store.dispatch("fetchNewsPosts");
+    store.dispatch("fetchPosts");
     // axios
     //     .get("/api/posts")
     //     .then((res) => {
