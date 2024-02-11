@@ -11,6 +11,9 @@
                     image-width="1500"
                     image-height="300"
                     location="cover"
+                    alt="user background image"
+                    classes="object-cover w-full"
+                    :user-image="user.data.attributes.cover_image"
                 ></uploadable-image>
             </div>
 
@@ -18,10 +21,13 @@
                 class="absolute flex items-center bottom-0 left-0 -mb-8 ml-12 z-20"
             >
                 <div class="w-32">
-                    <img
-                        src="https://cdn.pixabay.com/photo/2014/07/09/10/04/man-388104_960_720.jpg"
+                    <UploadableImage
+                        image-width="1500"
+                        image-height="300"
+                        location="profile"
                         alt="user profile image"
-                        class="object-cover w-32 h-32 border-4 border-gray-200 rounded-full shadow-lg"
+                        classes="object-cover w-32 h-32 border-4 border-gray-200 rounded-full shadow-lg"
+                        :user-image="user.data.attributes.profile_image"
                     />
                 </div>
 

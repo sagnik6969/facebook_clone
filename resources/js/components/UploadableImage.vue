@@ -1,7 +1,7 @@
 <template>
     <div>
         <img
-            src="https://cdn.pixabay.com/photo/2017/03/26/12/13/countryside-2175353_960_720.jpg"
+            :src="imageObject.data.attributes.path"
             alt="user background image"
             ref="userImage"
             class="object-cover w-full"
@@ -13,8 +13,16 @@
 import Dropzone from "dropzone";
 import { computed, getCurrentInstance, onMounted, ref } from "vue";
 
-const props = defineProps(["imageWidth", "imageHeight", "location"]);
+const props = defineProps([
+    "imageWidth",
+    "imageHeight",
+    "location",
+    "classes",
+    "alt",
+    "userImage",
+]);
 const dropzone = ref(null);
+const uploadedImage = ref(null);
 
 const settings = computed(() => {
     return {
@@ -32,6 +40,7 @@ const settings = computed(() => {
         },
         success: (e, res) => {
             alert("uploaded!");
+            uploadedImage.value = res;
         },
     };
 });
@@ -45,42 +54,7 @@ onMounted(() => {
     );
 });
 
-// export default {
-//     name: "UploadableImage",
-
-//     props: ["imageWidth", "imageHeight", "location"],
-
-//     data: () => {
-//         return {
-//             dropzone: null,
-//         };
-//     },
-
-//     mounted() {
-//         this.dropzone = new Dropzone(this.$refs.userImage, this.settings);
-//     },
-
-//     computed: {
-//         settings() {
-//             return {
-//                 paramName: "image",
-//                 url: "/api/user-images",
-//                 acceptedFiles: "image/*",
-//                 params: {
-//                     width: this.imageWidth,
-//                     height: this.imageHeight,
-//                     location: this.location,
-//                 },
-//                 headers: {
-//                     "X-CSRF-TOKEN": document.head.querySelector(
-//                         "meta[name=csrf-token]"
-//                     ).content,
-//                 },
-//                 success: (e, res) => {
-//                     alert("uploaded!");
-//                 },
-//             };
-//         },
-//     },
-// };
+const imageObject = computed(() => {
+    return uploadedImage.value || props.userImage;
+});
 </script>

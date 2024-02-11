@@ -52,7 +52,7 @@ class UserImageTest extends TestCase
                 'type' => 'user-images',
                 'user_image_id' => $userImage->id,
                 'attributes' => [
-                    'path' => url($userImage->path),
+                    'path' => url('storage/' . $userImage->path),
                     'width' => $userImage->width,
                     'height' => $userImage->height,
                     'location' => $userImage->location,
