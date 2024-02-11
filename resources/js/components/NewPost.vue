@@ -48,6 +48,20 @@
                 </button>
             </div>
         </div>
+        <div class="dropzone-previews">
+            <div id="dz-template" class="hidden">
+                <div class="dz-preview dz-file-preview mt-4">
+                    <div class="dz-details">
+                        <img data-dz-thumbnail class="w-32 h-32" />
+
+                        <button data-dz-remove class="text-xs">REMOVE</button>
+                    </div>
+                    <div class="dz-progress">
+                        <span class="dz-upload" data-dz-upload></span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -68,7 +82,9 @@ const settings = computed(() => ({
     paramName: "image",
     url: "/api/posts",
     acceptedFiles: "image/*",
-    // clickable: ".dz-clickable",
+    clickable: ".dz-clickable",
+    previewsContainer: ".dropzone-previews",
+    previewTemplate: document.querySelector("#dz-template").innerHTML,
     autoProcessQueue: false,
     params: {
         width: 1000,
@@ -82,7 +98,9 @@ const settings = computed(() => ({
         formData.append("body", store.getters.postMessage);
     },
     success: (event, res) => {
-        alert("success");
+        // alert("success");
+        dropzone.value.removeAllFiles();
+        store.commit("pushPost", res);
     },
 }));
 
@@ -99,6 +117,7 @@ const postHandler = () => {
     } else {
         store.dispatch("postMessage");
     }
+    store.commit("updateMessage", "");
 };
 </script>
 <style>
@@ -111,7 +130,7 @@ const postHandler = () => {
     opacity: 0;
 }
 
-.dz-preview {
+/* .dz-preview {
     display: none;
-}
+} */
 </style>
