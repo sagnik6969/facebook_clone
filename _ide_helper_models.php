@@ -13,23 +13,72 @@
 
 namespace App\Models{
 /**
+ * App\Models\Comment
+ *
+ * @property int $id
+ * @property int $post_id
+ * @property int $user_id
+ * @property string $body
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment wherePostId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereUserId($value)
+ */
+	class Comment extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Friend
  *
  * @property int $id
  * @property int $user_id
  * @property int $friend_id
+ * @property int|null $status
+ * @property \Illuminate\Support\Carbon|null $confirmed_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Friend newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Friend newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Friend query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Friend whereConfirmedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Friend whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Friend whereFriendId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Friend whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Friend whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Friend whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Friend whereUserId($value)
  */
 	class Friend extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Like
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property int $post_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Like newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Like newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Like query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Like whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Like whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Like wherePostId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Like whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Like whereUserId($value)
+ */
+	class Like extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -42,6 +91,10 @@ namespace App\Models{
  * @property string|null $image
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
+ * @property-read int|null $comments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $likes
+ * @property-read int|null $likes_count
  * @property-read \App\Models\User $user
  * @method static \Database\Factories\PostFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Post newModelQuery()
@@ -69,8 +122,10 @@ namespace App\Models{
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Friend> $friends
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $friends
  * @property-read int|null $friends_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Post> $likedPosts
+ * @property-read int|null $liked_posts_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Post> $posts

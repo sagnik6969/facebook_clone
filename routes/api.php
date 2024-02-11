@@ -7,6 +7,7 @@ use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserImageController;
 use App\Http\Controllers\UserPostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,6 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('friend-request-response', FriendRequestResponseController::class);
     Route::apiResource('/posts/{post}/like', PostLikeController::class);
     Route::apiResource('/posts/{post}/comment', PostCommentController::class);
-
+    Route::apiResource('user-images', UserImageController::class);
 });
 
