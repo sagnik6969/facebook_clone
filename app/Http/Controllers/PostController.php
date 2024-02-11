@@ -33,7 +33,7 @@ class PostController extends Controller
             ->posts()
             ->create([
                 'body' => $data['body'],
-                'image' => $image ?? null,
+                'image' => !empty($image) ? 'storage/' . $image : null,
             ]);
 
         // dump($image);

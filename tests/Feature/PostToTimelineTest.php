@@ -97,7 +97,7 @@ class PostToTimelineTest extends TestCase
 
                     'attributes' => [
                         'body' => 'Testing Body',
-                        'image' => url('post-images/' . $file->hashName())
+                        'image' => url('storage/post-images/' . $file->hashName())
 
                     ]
                 ],
