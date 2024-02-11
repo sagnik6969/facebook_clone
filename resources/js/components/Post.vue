@@ -105,6 +105,13 @@
                 />
                 <button
                     v-if="commentBody"
+                    @click="
+                        $store.dispatch('commentPost', {
+                            postKey: key,
+                            postId: post.data.post_id,
+                            body: commentBody,
+                        })
+                    "
                     class="bg-gray-200 ml-2 px-2 py-1 rounded-lg focus:outline-none"
                 >
                     Post
@@ -124,7 +131,7 @@
                     />
                 </div>
                 <div class="ml-4 flex-1">
-                    <div class="bg-gray-200 rounded-lg p-2 text-sm">
+                    <div class="bg-gray-200 rounded-lg p-2 text-sm space-x-1">
                         <a
                             class="font-bold text-blue-700"
                             :href="

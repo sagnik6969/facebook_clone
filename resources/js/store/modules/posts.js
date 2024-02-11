@@ -32,6 +32,10 @@ const mutations = {
     pushLikes(state, data) {
         state.newsPosts.data[data.postKey].data.attributes.likes = data.likes;
     },
+    pushComments(state, data) {
+        state.newsPosts.data[data.postKey].data.attributes.comments =
+            data.comments;
+    },
 };
 const actions = {
     fetchNewsPosts(context) {
@@ -74,6 +78,21 @@ const actions = {
             })
             .catch((err) => {
                 console.log("unable to like post");
+            });
+    },
+    commentPost(context, data) {
+        axios
+            .post("/api/posts/" + data.postId + "/comment", {
+                body: data.body,
+            })
+            .then((res) => {
+                context.commit("pushComments", {
+                    comments: res.data,
+                    postKey: data.postKey,
+                });
+            })
+            .catch((err) => {
+                console.log("unable to comment");
             });
     },
 };
